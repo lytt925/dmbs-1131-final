@@ -57,3 +57,31 @@ class RegistrationService:
                     return {
                         "error": "No registration record found for the user and activity",
                     }
+                
+    @staticmethod
+    def get_registration_by_user_id(user_id: int, page: int = 1, per_page: int = 10) -> dict:
+        query = """
+            SELECT * 
+            FROM registration
+            WHERE user_id = %s
+            LIMIT %s OFFSET %s;
+        """
+        
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                # Calculate offset
+                offset = (page - 1) * per_page
+
+                # Fetch paginated data
+                cur.execute(query, (user_id, per_page, offset))
+                registrations = cur.fetchall()
+                columns = [desc[0] for desc in cur.description]
+                results = [dict(zip(columns, registration)) for registration in registrations]
+
+        return {
+            "data": results,
+            "meta": {
+                "page": page,
+                "per_page": per_page,
+            }
+        }

@@ -31,11 +31,13 @@ GROUP BY
 
 -- 計算貓和狗的平均留存率（待多久
 SELECT
-    species,
-    AVG(EXTRACT(EPOCH FROM COALESCE(leave_at, CURRENT_TIMESTAMP) - arrived_at) / 86400) AS avg_stay_days
+    a.shelter_id,
+    s.name AS shelter_name,
+    a.species,
+    AVG(EXTRACT(EPOCH FROM COALESCE(a.leave_at, CURRENT_TIMESTAMP) - a.arrived_at) / 86400) AS avg_stay_days
 FROM
-    animal
-WHERE
-    species IN ('Cat', 'Dog')
+    animal a
+JOIN
+    shelter s ON a.shelter_id = s.shelter_id
 GROUP BY
-    species;
+    a.shelter_id, s.name, a.species;
