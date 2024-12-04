@@ -39,7 +39,7 @@ CREATE TABLE animal (
     breed VARCHAR(50),
     size CHAR(2),
     death_time TIMESTAMP,
-    adoption_status CHAR(50) NOT NULL,
+    adoption_status VARCHAR(50) NOT NULL,
     leave_at TIMESTAMP,
     arrived_at TIMESTAMP,
     is_sterilized BOOLEAN,

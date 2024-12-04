@@ -1,9 +1,10 @@
 from app.database import db
 
+
 class UserService:
     @staticmethod
     def get_user_by_id(user_id: int):
-        query = "SELECT * FROM users WHERE id = %s"
+        query = "SELECT * FROM public.user WHERE user_id = %s"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, (user_id,))
@@ -15,7 +16,7 @@ class UserService:
 
     @staticmethod
     def create_user(name: str, email: str):
-        query = "INSERT INTO users (name, email) VALUES (%s, %s) RETURNING id"
+        query = "INSERT INTO public.user (name, email) VALUES (%s, %s) RETURNING id"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, (name, email))

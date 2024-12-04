@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.database import db
 import app.routers.user as user
+import app.routers.registration as registration
 
 app = FastAPI()
 
@@ -21,7 +22,7 @@ async def root():
 
 # Register routers
 app.include_router(user.router)
-
+app.include_router(registration.router)
 
 if __name__ == "__main__":
     import uvicorn

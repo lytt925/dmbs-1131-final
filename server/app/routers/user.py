@@ -1,5 +1,11 @@
 from fastapi import APIRouter, HTTPException
 from app.services.user_service import UserService
+from pydantic import BaseModel
+
+class SignUpActivityRequest(BaseModel):
+    user_id: int
+    activity_id: int
+    status: str
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -14,3 +20,4 @@ async def get_user(user_id: int):
 async def create_user(name: str, email: str):
     new_user_id = UserService.create_user(name, email)
     return {"message": "User created", "user_id": new_user_id}
+
