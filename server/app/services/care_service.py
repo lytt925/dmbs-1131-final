@@ -14,9 +14,7 @@ class CareService:
                 care_record = cur.fetchall()
                 if len(care_record) != 0:
                     columns = [desc[0] for desc in cur.description]
-                    response = [] 
-                    for c in care_record:
-                        response.append(dict(zip(columns, c)))
+                    response = [dict(zip(columns, care)) for care in care_record]
                     return response
                 return None
             

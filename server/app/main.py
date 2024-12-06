@@ -4,6 +4,7 @@ import app.routers.user as user
 import app.routers.care as care
 import app.routers.registration as registration
 import app.routers.shelter as shelter
+import app.routers.animal as animal
 
 app = FastAPI()
 
@@ -27,6 +28,7 @@ app.include_router(user.router)
 app.include_router(care.router)
 app.include_router(registration.router)
 app.include_router(shelter.router)
+app.include_router(animal.router)
 
 if __name__ == "__main__":
     import uvicorn
