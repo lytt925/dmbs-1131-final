@@ -1,16 +1,20 @@
 from app.database import db
 from datetime import datetime
 from typing import Optional
+from app.models.animal import AnimalModel
+
 
 class AnimalService:
     @staticmethod
-    def get_animals(animal_name: str=None, animal_id: int=None, shelter_id: int=None):
-        if not(animal_name or shelter_id or animal_id):
+    def get_animals(
+        animal_name: str = None, animal_id: int = None, shelter_id: int = None
+    ):
+        if not (animal_name or shelter_id or animal_id):
             return None
         if animal_id:
             query = "SELECT * FROM animal WHERE animal_id = %s"
             animal_param = (animal_id,)
-        elif (animal_name and shelter_id):
+        elif animal_name and shelter_id:
             query = "SELECT * FROM animal WHERE name = %s AND shelter_id = %s"
             animal_param = (animal_name, shelter_id)
         else:
@@ -26,7 +30,7 @@ class AnimalService:
                     response = [dict(zip(columns, animal)) for animal in animals]
                     return response
                 return None
-            
+
     @staticmethod
     def get_unadopted_animals():
         query = "SELECT * FROM animal WHERE adoption_status = '未領養';"
@@ -39,9 +43,11 @@ class AnimalService:
                     response = [dict(zip(columns, animal)) for animal in animals]
                     return response
                 return None
-            
+
     @staticmethod
-    def update_animals_adoption(animal_name: str=None, animal_id: int=None, shelter_id: int=None):
+    def update_animals_adoption(
+        animal_name: str = None, animal_id: int = None, shelter_id: int = None
+    ):
         current_time = datetime.now()
         if animal_id:
             query = """
@@ -71,31 +77,55 @@ class AnimalService:
                 conn.commit()
                 if cur.rowcount == 0:
                     return None
-                return {"message": "Animal adoption status updated successfully", "animal_id": animal_id, "leave_at": current_time}
-            
+                return {
+                    "message": "Animal adoption status updated successfully",
+                    "animal_id": animal_id,
+                    "leave_at": current_time,
+                }
+
     @staticmethod
-    def create_animal(animal_id: int,
-                  name: str,
-                  species: str,
-                  breed: str,
-                  size: str,
-                  death_time: Optional[datetime],
-                  adoption_status: str,
-                  leave_at: Optional[datetime],
-                  arrived_at: datetime,
-                  is_sterilized: bool,
-                  sex: str,
-                  shelter_id: int):
+    def create_animal(
+        name: str,
+        species: str,
+        breed: str,
+        size: str,
+        is_sterilized: bool,
+        sex: str,
+        shelter_id: int,
+    ):
         query = """
-            INSERT INTO animal (animal_id, name, species, breed, size, death_time, adoption_status, leave_at, arrived_at, is_sterilized, sex, shelter_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING *;
+            INSERT INTO animal (name, species, breed, size, is_sterilized, sex, shelter_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            RETURNING animal_id, name, species, breed, size, is_sterilized, adoption_status, sex, shelter_id, death_time, leave_at, arrived_at;
          """
-        params = (animal_id, name, species, breed, size, death_time, adoption_status, leave_at, arrived_at, is_sterilized, sex, shelter_id)
-        
+        params = (
+            name,
+            species,
+            breed,
+            size,
+            is_sterilized,
+            sex,
+            shelter_id,
+        )
+
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, params)
-                animal = cur.fetchone()
+                row = cur.fetchone()
                 conn.commit()
-                return {"animal_id": animal_id, "name" : name, "species": species, "breed" : breed, "size" : size, "death_time" : death_time, "adoption_status": adoption_status, "is_sterilized" : is_sterilized, "sex" : sex, "shelter_id": shelter_id}
+                animal = AnimalModel(
+                    animal_id=row[0],
+                    name=row[1],
+                    species=row[2],
+                    breed=row[3],
+                    size=row[4],
+                    is_sterilized=row[5],
+                    adoption_status=row[6],
+                    sex=row[7],
+                    shelter_id=row[8],
+                    death_time=row[9],
+                    leave_at=row[10],
+                    arrived_at=row[11],
+                )
+                conn.commit()
+                return animal
