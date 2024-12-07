@@ -30,11 +30,3 @@ async def create_punch(punch: PunchRequest):
     punch_type = punch.punch_type
     punches = EmployeeService.create_punch_for_user(employee_id, punch_type)
     return punches
-
-
-@router.get("/workloads")
-async def get_averaged_workload(employee_id: int=None, month: str=None, year: str=None):
-    workloads = EmployeeService.get_averaged_workload_by_month(employee_id, month, year)
-    if type(workloads) is dict:
-        raise HTTPException(status_code=workloads["error_code"], detail=workloads["message"])
-    return workloads
