@@ -3,11 +3,18 @@ from app.database import db
 
 class UserService:
     @staticmethod
-    def get_user_by_id(user_id: int):
-        query = "SELECT * FROM public.user WHERE user_id = %s"
+    def get_user(user_id: int=None, email: str=None):
+        if not (user_id or email):
+            return None
+        if user_id:
+            query = "SELECT * FROM public.user WHERE user_id = %s"
+            params = (user_id,)
+        elif email:
+            query = "SELECT * FROM public.user WHERE email = %s"
+            params = (email,)
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(query, (user_id,))
+                cur.execute(query, params)
                 user = cur.fetchone()
                 if user:
                     columns = [desc[0] for desc in cur.description]

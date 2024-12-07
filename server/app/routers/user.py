@@ -9,9 +9,9 @@ class SignUpActivityRequest(BaseModel):
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-@router.get("/{user_id}")
-async def get_user(user_id: int):
-    user = UserService.get_user_by_id(user_id)
+@router.get("/")
+async def get_user(user_id: int=None, email: str=None):
+    user = UserService.get_user(user_id, email)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
