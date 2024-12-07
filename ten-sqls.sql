@@ -41,3 +41,7 @@ JOIN
     shelter s ON a.shelter_id = s.shelter_id
 GROUP BY
     a.shelter_id, s.name, a.species;
+
+-- 打卡
+INSERT INTO punch (employee_id, punch_type) 
+VALUES (?, ?);
