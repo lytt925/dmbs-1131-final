@@ -1,7 +1,8 @@
 import requests
 import json
+from config import API_BASE_URL
 
-API_BASE_URL = "http://localhost:8001/applications"
+API_BASE_URL += "/applications"
 
 # 建立一個 application 的資料
 def create_application():
@@ -99,6 +100,7 @@ def menu():
             break
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     menu()
