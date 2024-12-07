@@ -16,8 +16,8 @@ async def get_animals(
 
 
 @router.get("/unadopted")
-async def get_unadopted_animals():
-    animals = AnimalService.get_unadopted_animals()
+async def get_unadopted_animals(shelter_id: int = None):
+    animals = AnimalService.get_unadopted_animals(shelter_id)
     if not animals:
         raise HTTPException(status_code=404, detail="No unadopted animals found")
     return animals

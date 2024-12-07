@@ -3,6 +3,19 @@ from app.database import db
 
 class ShelterService:
     @staticmethod
+    def get_shelters() -> List[dict]:
+        query = """
+        SELECT shelter_id, name, address, phone FROM shelter;
+        """
+
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query)
+                rows = cur.fetchall()
+                columns = [desc[0] for desc in cur.description]
+                return [dict(zip(columns, row)) for row in rows]
+
+    @staticmethod
     def get_shelter_occupancy() -> List[dict]:
         query = """
             SELECT
@@ -49,7 +62,6 @@ class ShelterService:
                 columns = [desc[0] for desc in cur.description]
                 result = [dict(zip(columns, row)) for row in rows]
         
-        # Transform the result into a list of shelters with cat and dog retention data
         shelters = {}
         for row in result:
             shelter_id = row["shelter_id"]

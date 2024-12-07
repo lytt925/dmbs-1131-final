@@ -32,11 +32,14 @@ class AnimalService:
                 return None
 
     @staticmethod
-    def get_unadopted_animals():
-        query = "SELECT * FROM animal WHERE adoption_status = '未領養';"
+    def get_unadopted_animals(shelter_id: int = None):
+        query = """
+        SELECT * FROM animal 
+        WHERE adoption_status = '未領養' AND shelter_id = %s;
+        """
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(query)
+                cur.execute(query, (shelter_id,))
                 animals = cur.fetchall()
                 if animals:
                     columns = [desc[0] for desc in cur.description]
@@ -114,19 +117,8 @@ class AnimalService:
                 cur.execute(query, params)
                 row = cur.fetchone()
                 conn.commit()
-                animal = AnimalModel(
-                    animal_id=row[0],
-                    name=row[1],
-                    species=row[2],
-                    breed=row[3],
-                    size=row[4],
-                    is_sterilized=row[5],
-                    adoption_status=row[6],
-                    sex=row[7],
-                    shelter_id=row[8],
-                    death_time=row[9],
-                    leave_at=row[10],
-                    arrived_at=row[11],
-                )
+                columns = [desc[0] for desc in cur.description]
+                animal = dict(zip(columns, row))
+                animal = AnimalModel(**animal)
                 conn.commit()
                 return animal
