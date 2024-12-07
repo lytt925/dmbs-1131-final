@@ -3,6 +3,20 @@ from app.services.shelter_service import ShelterService
 
 router = APIRouter(prefix="/shelters", tags=["Shelters"])
 
+@router.get("/")
+async def get_shelters():
+    """
+    Get all shelters.
+    """
+    try:
+        data = ShelterService.get_shelters()
+        return {
+            "message": "Shelters retrieved successfully",
+            "data": data,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/occupancy")
 async def get_shelter_occupancy():
     """
