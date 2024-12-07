@@ -14,6 +14,7 @@ class PunchRequest(BaseModel):
     employee_id: int
     punch_type: PunchType
 
+
 @router.get("/stats/")
 async def get_all_employees_stats(start_time: datetime, end_time: datetime):
     stats = EmployeeService.get_all_employees_stats(start_time, end_time)
@@ -30,3 +31,10 @@ async def create_punch(punch: PunchRequest):
     punch_type = punch.punch_type
     punches = EmployeeService.create_punch_for_user(employee_id, punch_type)
     return punches
+
+@router.get("/login")
+async def login_employee(employee_id: int, password: str):
+    employee = EmployeeService.get_employee_by_credentials(employee_id, password)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Invalid employee_id or password.")
+    return employee
