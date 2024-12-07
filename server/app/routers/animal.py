@@ -25,12 +25,15 @@ async def get_unadopted_animals(shelter_id: int = None):
 
 @router.put("/")
 async def update_animals_adoption(
-    animal_name: str = None, animal_id: int = None, shelter_id: int = None, adoption_status: str = "已領養"
+    animal_id: int = None, adoption_status: str = None
 ):
-    animals = AnimalService.update_animals_adoption(adoption_status, animal_name, animal_id, shelter_id)
-    if not animals:
+    result = AnimalService.update_animals_adoption(animal_id, adoption_status)
+    if not result:
         raise HTTPException(status_code=404, detail="Animal not found")
-    return animals
+    return {
+        "message": "Animal adoption status updated successfully",
+        "data": result,
+    }
 
 
 @router.post("/")

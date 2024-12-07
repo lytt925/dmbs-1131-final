@@ -5,7 +5,7 @@ import app.routers.care as care
 import app.routers.registration as registration
 import app.routers.shelter as shelter
 import app.routers.animal as animal
-import app.routers.applicatoin as application
+import app.routers.application as application
 import app.routers.employee as employee
 
 app = FastAPI()
