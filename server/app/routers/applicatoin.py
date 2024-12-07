@@ -13,10 +13,10 @@ class ApplicationCreate(BaseModel):
     status: Optional[str] = "P"  
     user_id: int
     animal_id: int
-
+    
 @router.post("/")
 async def create_application(application: ApplicationCreate):
-    created_app = ApplicationService.create_application(
+    result = ApplicationService.create_application(
         application_id=application.application_id,
         update_at=application.update_at,
         status=application.status,
@@ -24,11 +24,12 @@ async def create_application(application: ApplicationCreate):
         animal_id=application.animal_id
     )
 
-    if not created_app:
-        # 條件不符，無法插入
-        raise HTTPException(status_code=400, detail="Unable to create application. Conditions not met.")
-
-    return created_app
+    if result["success"]:
+        return result["data"]
+    else:
+        # 將失敗原因組合成一段敘述文字
+        detail_message = "Conditions not met: " + "; ".join(result["reasons"])
+        raise HTTPException(status_code=400, detail=detail_message)
 
 
 @router.get("/")

@@ -98,4 +98,4 @@ class AnimalService:
                 cur.execute(query, params)
                 animal = cur.fetchone()
                 conn.commit()
-                return animal
+                return {"animal_id": animal_id, "name" : name, "species": species, "breed" : breed, "size" : size, "death_time" : death_time, "adoption_status": adoption_status, "is_sterilized" : is_sterilized, "sex" : sex, "shelter_id": shelter_id}
