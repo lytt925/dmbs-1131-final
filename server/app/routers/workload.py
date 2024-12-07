@@ -5,7 +5,7 @@ router = APIRouter(prefix="/workloads", tags=["Workloads"])
 
 @router.get("/")
 async def get_averaged_workload(employee_id: int=None, month: str=None):
-    workloads = WorkloadService.get_averaged_workload(employee_id, month)
-    if not workloads:
-        raise HTTPException(status_code=404, detail="Workload not found")
+    workloads = WorkloadService.get_averaged_workload_by_month(employee_id, month)
+    if type(workloads) is dict:
+        raise HTTPException(status_code=workloads["error_code"], detail=workloads["message"])
     return workloads

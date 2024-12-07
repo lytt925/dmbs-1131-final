@@ -47,3 +47,17 @@ async def update_application_status(application_id: int, status: str):
     if not updated_app:
         raise HTTPException(status_code=404, detail="Application not found")
     return updated_app
+
+@router.get("/stats")
+async def get_total_application_statistics():
+    statistics = ApplicationService.get_total_application_statistics()
+    if not statistics:
+        raise HTTPException(status_code=404, detail="Failed to retrieve statistics")
+    return statistics
+
+@router.get("/stats/{filter}")
+async def get_filtered_statistics(filter: str):
+    statistics = ApplicationService.get_filtered_application_statistics(filter)
+    if not statistics:
+        raise HTTPException(status_code=404, detail="Failed to retrieve statistics")
+    return statistics
