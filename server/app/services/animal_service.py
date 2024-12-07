@@ -46,30 +46,31 @@ class AnimalService:
 
     @staticmethod
     def update_animals_adoption(
-        animal_name: str = None, animal_id: int = None, shelter_id: int = None
+        adoption_status: str,
+        animal_name: str = None, animal_id: int = None, shelter_id: int = None,
     ):
         current_time = datetime.now()
         if animal_id:
             query = """
             UPDATE animal
-            SET adoption_status = '已領養', leave_at = %s
+            SET adoption_status = %s, leave_at = %s
             WHERE animal_id = %s;
             """
-            params = (current_time, animal_id)
+            params = (adoption_status, current_time, animal_id)
         elif animal_name and shelter_id:
             query = """
             UPDATE animal
-            SET adoption_status = '已領養', leave_at = %s
+            SET adoption_status = %s, leave_at = %s
             WHERE name = %s AND shelter_id = %s;
             """
-            params = (current_time, animal_name, shelter_id)
+            params = (adoption_status, current_time, animal_name, shelter_id)
         else:
             query = """
             UPDATE animal
-            SET adoption_status = '已領養', leave_at = %s
+            SET adoption_status = %s, leave_at = %s
             WHERE name = %s OR shelter_id = %s;
             """
-            params = (current_time, animal_name, shelter_id)
+            params = (adoption_status, current_time, animal_name, shelter_id)
 
         with db.get_connection() as conn:
             with conn.cursor() as cur:

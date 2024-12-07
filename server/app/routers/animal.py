@@ -25,9 +25,9 @@ async def get_unadopted_animals():
 
 @router.put("/")
 async def update_animals_adoption(
-    animal_name: str = None, animal_id: int = None, shelter_id: int = None
+    animal_name: str = None, animal_id: int = None, shelter_id: int = None, adoption_status: str = "已領養"
 ):
-    animals = AnimalService.update_animals_adoption(animal_name, animal_id, shelter_id)
+    animals = AnimalService.update_animals_adoption(adoption_status, animal_name, animal_id, shelter_id)
     if not animals:
         raise HTTPException(status_code=404, detail="Animal not found")
     return animals
