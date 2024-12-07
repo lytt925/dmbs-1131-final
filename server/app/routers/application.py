@@ -4,7 +4,6 @@ from app.services.animal_service import AnimalService
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
-from datetime import datetime
 
 router = APIRouter(prefix="/applications", tags=["Application"])
 
