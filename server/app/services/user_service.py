@@ -16,7 +16,7 @@ class UserService:
 
     @staticmethod
     def create_user(name: str, email: str):
-        query = "INSERT INTO public.user (name, email) VALUES (%s, %s) RETURNING id"
+        query = "INSERT INTO public.user (name, email) VALUES (%s, %s) RETURNING *"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, (name, email))
