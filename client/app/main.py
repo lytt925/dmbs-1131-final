@@ -1,4 +1,5 @@
 import sys
+from user import main as user
 
 def main():
     print("Welcome to the Animal Shelter Application System!")
@@ -23,11 +24,11 @@ def main():
             print("Please login to continue.")
             email = input("Email: ")
             password = input("Password: ")
-            # user.main(email)
+            # user(email)
         elif operation == "2":
             email = input("Email: ")
             password = input("Password: ")
-            # user.main(email)
+            user.main(email)
     elif role == "2":
         account = input("Employee ID: ")
         password = input("Password: ")

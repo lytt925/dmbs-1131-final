@@ -48,32 +48,18 @@ class AnimalService:
                 return None
 
     @staticmethod
-    def update_animals_adoption(
-        adoption_status: str,
-        animal_name: str = None, animal_id: int = None, shelter_id: int = None,
-    ):
-        current_time = datetime.now()
-        if animal_id:
-            query = """
-            UPDATE animal
-            SET adoption_status = %s, leave_at = %s
-            WHERE animal_id = %s;
-            """
-            params = (adoption_status, current_time, animal_id)
-        elif animal_name and shelter_id:
-            query = """
-            UPDATE animal
-            SET adoption_status = %s, leave_at = %s
-            WHERE name = %s AND shelter_id = %s;
-            """
-            params = (adoption_status, current_time, animal_name, shelter_id)
+    def update_animals_adoption(animal_id: int, adoption_status: str):
+        if adoption_status == "已領養":
+            leave_at_time = datetime.now()
         else:
-            query = """
-            UPDATE animal
-            SET adoption_status = %s, leave_at = %s
-            WHERE name = %s OR shelter_id = %s;
-            """
-            params = (adoption_status, current_time, animal_name, shelter_id)
+            leave_at_time = None
+        
+        query = """
+        UPDATE animal
+        SET adoption_status = %s, leave_at = %s
+        WHERE animal_id = %s;
+        """
+        params = (adoption_status, leave_at_time, animal_id)
 
         with db.get_connection() as conn:
             with conn.cursor() as cur:
@@ -81,11 +67,7 @@ class AnimalService:
                 conn.commit()
                 if cur.rowcount == 0:
                     return None
-                return {
-                    "message": "Animal adoption status updated successfully",
-                    "animal_id": animal_id,
-                    "leave_at": current_time,
-                }
+                return {"animal_id": animal_id, "adoption_status": adoption_status}
 
     @staticmethod
     def create_animal(
@@ -100,7 +82,7 @@ class AnimalService:
         query = """
             INSERT INTO animal (name, species, breed, size, is_sterilized, sex, shelter_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
-            RETURNING animal_id, name, species, breed, size, is_sterilized, adoption_status, sex, shelter_id, death_time, leave_at, arrived_at;
+            RETURNING *;
          """
         params = (
             name,
@@ -122,3 +104,32 @@ class AnimalService:
                 animal = AnimalModel(**animal)
                 conn.commit()
                 return animal
+
+    @staticmethod
+    def check_animal_availability(animal_id: int):
+        query = """
+        SELECT adoption_status FROM animal WHERE animal_id = %s;
+        """
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, (animal_id,))
+                adoption_status = cur.fetchone()
+                if adoption_status:
+                    if adoption_status[0] == "未領養":
+                        return True
+                    return False
+                if not adoption_status:
+                    return None
+    
+    @staticmethod
+    def fail_all_prev_applications(animal_id: int):
+        query = """
+        UPDATE application
+        SET status = 'F'
+        WHERE animal_id = %s AND status = 'P';
+        """
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, (animal_id,))
+                conn.commit()
+                return True

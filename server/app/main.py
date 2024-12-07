@@ -5,8 +5,9 @@ import app.routers.care as care
 import app.routers.registration as registration
 import app.routers.shelter as shelter
 import app.routers.animal as animal
-import app.routers.applicatoin as application
+import app.routers.application as application
 import app.routers.employee as employee
+import app.routers.activity as activity
 
 app = FastAPI()
 
@@ -33,6 +34,7 @@ app.include_router(shelter.router)
 app.include_router(animal.router)
 app.include_router(application.router)
 app.include_router(employee.router)
+app.include_router(activity.router)
 
 
 if __name__ == "__main__":

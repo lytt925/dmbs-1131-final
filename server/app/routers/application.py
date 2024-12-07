@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.services.application_service import ApplicationService
+from app.services.animal_service import AnimalService
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -8,18 +9,15 @@ from datetime import datetime
 router = APIRouter(prefix="/applications", tags=["Application"])
 
 class ApplicationCreate(BaseModel):
-    application_id: int
-    update_at: datetime
-    status: Optional[str] = "P"  
     user_id: int
     animal_id: int
     
 @router.post("/")
 async def create_application(application: ApplicationCreate):
+    isAnimalAvailable = AnimalService.check_animal_availability(application.animal_id)
+    if not isAnimalAvailable:
+        raise HTTPException(status_code=400, detail="The animal is not available for adoption.")
     result = ApplicationService.create_application(
-        application_id=application.application_id,
-        update_at=application.update_at,
-        status=application.status,
         user_id=application.user_id,
         animal_id=application.animal_id
     )
@@ -27,8 +25,7 @@ async def create_application(application: ApplicationCreate):
     if result["success"]:
         return result["data"]
     else:
-        # 將失敗原因組合成一段敘述文字
-        detail_message = "Conditions not met: " + "; ".join(result["reasons"])
+        detail_message = "Conditions not met: " + result["reasons"]
         raise HTTPException(status_code=400, detail=detail_message)
 
 
@@ -44,8 +41,10 @@ async def get_applications(user_id: Optional[int]=None, animal_id: Optional[int]
 @router.put("/{application_id}/status")
 async def update_application_status(application_id: int, status: str):
     updated_app = ApplicationService.update_application_status(application_id, status)
+    if status == "S":
+        AnimalService.fail_all_prev_applications(updated_app["animal_id"])
     if not updated_app:
-        raise HTTPException(status_code=404, detail="Application not found")
+        raise HTTPException(status_code=404, detail="Something went wrong while updating the application status.")
     return updated_app
 
 @router.get("/stats")
