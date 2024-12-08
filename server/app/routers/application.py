@@ -29,9 +29,9 @@ async def create_application(application: ApplicationCreate):
 
 
 @router.get("/")
-async def get_applications(user_id: Optional[int]=None, animal_id: Optional[int]=None):
+async def get_applications(user_id: Optional[int]=None, animal_id: Optional[int]=None, shelter_id:Optional[int]= None):
     # 依據查詢參數決定要查詢的條件
-    apps = ApplicationService.get_applications(user_id=user_id, animal_id=animal_id)
+    apps = ApplicationService.get_applications(user_id=user_id, animal_id=animal_id, shelter_id = shelter_id)
     if not apps:
         raise HTTPException(status_code=404, detail="No applications found for given conditions.")
     return apps

@@ -59,27 +59,34 @@ class ApplicationService:
                     }
 
     @staticmethod
-    def get_applications(user_id: int = None, animal_id: int = None):
-        # 根據傳入參數組成動態的 SQL 條件式與參數
+    def get_applications(user_id: int = None, animal_id: int = None, shelter_id: int = None):
+        # 動態組裝條件
         conditions = []
         params = []
 
         if user_id is not None:
-            conditions.append("user_id = %s")
+            conditions.append("app.user_id = %s")
             params.append(user_id)
         if animal_id is not None:
-            conditions.append("animal_id = %s")
+            conditions.append("app.animal_id = %s")
             params.append(animal_id)
+        if shelter_id is not None:
+            conditions.append("ani.shelter_id = %s")
+            params.append(shelter_id)
 
-        base_query = "SELECT * FROM application JOIN animal USING (animal_id)"
+        # 基本查詢語句
+        base_query = """
+            SELECT app.*, ani.shelter_id
+            FROM application app
+            JOIN animal ani ON app.animal_id = ani.animal_id
+        """
 
         if conditions:
             # 使用 AND 串接條件
             where_clause = " WHERE " + " AND ".join(conditions)
             query = base_query + where_clause
         else:
-            # 若沒有傳入任何條件，就直接不加 WHERE，返回所有紀錄(或視需求返回 None)
-            # 如果不想在沒有條件時返回所有紀錄，可以選擇在 Router 層報錯。
+            # 如果沒有條件，返回所有記錄（也可以視需求限制此行為）
             query = base_query
 
         with db.get_connection() as conn:
