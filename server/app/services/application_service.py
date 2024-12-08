@@ -33,7 +33,7 @@ class ApplicationService:
 
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(check_application_query, (user_id))
+                cur.execute(check_application_query, (user_id,))
                 application_check = cur.fetchone()
         
         if application_check is not None:
