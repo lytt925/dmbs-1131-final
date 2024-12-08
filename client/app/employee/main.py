@@ -1,5 +1,5 @@
-from employee import login
-from employee import application
+from employee import login, application, care_record, animal, analysis
+
 
 def main(employee_id: int, password: str):
     employee = login.login_employee(employee_id, password)
@@ -19,8 +19,22 @@ def main(employee_id: int, password: str):
         operation = input("Enter your choice: ")
         match operation:
             case "1":
-                # 照顧紀錄相關功能 (未實作)
-                print("Care Records: (TODO)")
+                # 照顧紀錄子選單
+                while True:
+                    print("\nCare Records Menu:")
+                    print("1. 查詢照顧紀錄 (Query Care Records)")
+                    print("2. 新增照顧紀錄 (Create Care Record)")
+                    print("3. 返回上層選單 (Back)")
+                    sub_op = input("Enter your choice: ")
+                    match sub_op:
+                        case "1":
+                            care_record.query_care_records()
+                        case "2":
+                            care_record.create_care_record()
+                        case "3":
+                            break
+                        case _:
+                            print("Invalid choice. Please try again.")
             case "2":
                 # 領養資訊子選單
                 while True:
@@ -39,14 +53,51 @@ def main(employee_id: int, password: str):
                         case _:
                             print("Invalid choice. Please try again.")
             case "3":
-                # 動物管理
-                print("Animal Management: (TODO)")
+                # 動物管理子選單
+                while True:
+                    print("\nAnimal Management Menu:")
+                    print("1. 查詢動物資料 (Query Animals)")
+                    print("2. 修改領養狀態 (Modify Adoption Status)")
+                    print("3. 新增動物資料 (Add Animal Data)")
+                    print("4. 返回上層選單 (Back)")
+                    sub_op = input("Enter your choice: ")
+                    match sub_op:
+                        case "1":
+                            animal.query_animals()
+                        case "2":
+                            animal.update_animal_adoption_status()
+                        case "3":
+                            animal.add_animal_data()
+                        case "4":
+                            break
+                        case _:
+                            print("Invalid choice. Please try again.")
             case "4":
                 # 打卡
                 print("Punch: (TODO)")
             case "5":
-                # 營運分析
-                print("Operations Analysis: (TODO)")
+                # 營運分析子選單
+                while True:
+                    print("\nOperations Analysis Menu:")
+                    print("1. 收容率 (Shelter Occupancy)")
+                    print("2. 動物平均滯留時間 (Average Animal Stay)")
+                    print("3. 每月領養申請狀況 (Monthly Adoption Stats)")
+                    print("4. 員工打卡及照顧數 (Employee Punch and Care Records)")
+                    print("5. 返回上層選單 (Back)")
+                    sub_op = input("Enter your choice: ")
+                    match sub_op:
+                        case "1":
+                            analysis.view_shelter_occupancy()
+                        case "2":
+                            analysis.view_average_animal_retention()
+                        case "3":
+                            analysis.view_monthly_adoption_stats()
+                        case "4":
+                            analysis.view_employee_stats() 
+                        case "5":
+                            break
+                        case _:
+                            print("Invalid choice. Please try again.")
             case "6":
                 # 登出
                 return

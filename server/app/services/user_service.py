@@ -6,7 +6,7 @@ class UserService:
         query = "SELECT * FROM public.user WHERE user_id = %s"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(query, params)
+                cur.execute(query, (user_id,))
                 user = cur.fetchone()
                 if user:
                     columns = [desc[0] for desc in cur.description]
@@ -15,7 +15,7 @@ class UserService:
 
     @staticmethod
     def create_user(name: str, email: str, gender: str, password: str, phone: str):
-        query = "INSERT INTO public.user (name, email, gender, password, phone) VALUES (%s, %s, %s, %s, %s) RETURNING *"
+        query = "INSERT INTO users (name, email, gender, password, phone) VALUES (%s, %s, %s, %s, %s) RETURNING id"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, (name, email, gender, password, phone))
