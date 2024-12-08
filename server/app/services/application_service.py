@@ -27,13 +27,13 @@ class ApplicationService:
         # 檢查三個月內是否有過申請
         check_application_query = """
         SELECT 1 FROM application
-        WHERE user_id = %s AND animal_id = %s
+        WHERE user_id = %s 
           AND update_at >= NOW() - INTERVAL '3 months';
         """
-        
+
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(check_application_query, (user_id, animal_id))
+                cur.execute(check_application_query, (user_id))
                 application_check = cur.fetchone()
         
         if application_check is not None:

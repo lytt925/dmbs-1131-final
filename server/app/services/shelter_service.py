@@ -46,7 +46,7 @@ class ShelterService:
                 a.shelter_id,
                 s.name AS shelter_name,
                 a.species,
-                AVG(EXTRACT(EPOCH FROM COALESCE(a.leave_at, '2026-02-28') - a.arrived_at) / 86400) AS avg_stay_days
+                AVG(EXTRACT(EPOCH FROM COALESCE(a.leave_at, CURRENT_TIMESTAMP) - a.arrived_at) / 86400) AS avg_stay_days
             FROM
                 animal a
             JOIN
