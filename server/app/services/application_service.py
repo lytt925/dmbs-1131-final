@@ -55,7 +55,7 @@ class ApplicationService:
             conditions.append("animal_id = %s")
             params.append(animal_id)
 
-        base_query = "SELECT * FROM application"
+        base_query = "SELECT * FROM application JOIN animal USING (animal_id)"
 
         if conditions:
             # 使用 AND 串接條件
