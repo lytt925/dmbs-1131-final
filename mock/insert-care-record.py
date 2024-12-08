@@ -33,8 +33,7 @@ def get_employee_ids_by_shelter(conn, shelter_id):
 def generate_random_data(conn, animal_info, n):
     records = []
     care_types = ['C', 'F', 'W']  # C: 清潔, F: 餵食, W: 散步
-
-    for id in range(20):
+    for id in range(len(animal_info)):
         animal = animal_info[id]
         animal_id = animal[0]
         shelter_id = animal[1]
@@ -54,7 +53,7 @@ def generate_random_data(conn, animal_info, n):
             if leave_at:
                 max_days = (leave_at - arrived_at).days
             else:
-                max_days = (datetime.now() - arrived_at).days  # 不超過目前的時間
+                max_days = 20
 
             # 生成隨機的到達時間，包含天數、隨機小時和分鐘
             start_at = arrived_at + timedelta(
@@ -73,8 +72,8 @@ def insert_care_records(conn, records):
         with conn.cursor() as cur:
             # 插入資料的 SQL 語法
             insert_query = """
-            INSERT INTO care_record (animal_id, employee_id, care_type, start_at, end_at)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO care_record (animal_id, employee_id, care_type, start_at)
+            VALUES (%s, %s, %s, %s)
             ON CONFLICT (animal_id, employee_id, start_at) DO NOTHING;
             """
 
@@ -97,7 +96,7 @@ try:
     if not animal_info:
         print("無可用的動物資訊")
     else:
-        n = 10  # 指定要生成的資料筆數
+        n = 15  # 指定要生成的資料筆數
         random_records = generate_random_data(conn, animal_info, n)
         insert_care_records(conn, random_records)
 

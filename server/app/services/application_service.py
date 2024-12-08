@@ -10,9 +10,9 @@ class ApplicationService:
         # user_id 在 registration 表中至少有一筆 status = 'A'
         # ---------------------------------------------------------
         check_user_query = """
-        SELECT 1 FROM registration
-        WHERE user_id = %s
-          AND status = 'A';
+        SELECT 1 FROM registration r
+        JOIN activity a on a.activity_id = r.activity_id
+        WHERE user_id = %s AND status = 'A' AND a.activity_type = 'C';
         """
         with db.get_connection() as conn:
             with conn.cursor() as cur:
