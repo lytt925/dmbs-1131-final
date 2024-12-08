@@ -6,8 +6,6 @@ from pydantic import BaseModel
 class SignUpActivityRequest(BaseModel):
     user_id: int
     activity_id: int
-    status: str
-
 
 class CancelActivityRegistrationRequest(BaseModel):
     user_id: int
@@ -22,7 +20,6 @@ async def sign_up_for_activity(request: SignUpActivityRequest):
     result = RegistrationService.sign_up_for_activity(
         user_id=request.user_id,
         activity_id=request.activity_id,
-        status=request.status,
     )
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
