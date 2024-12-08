@@ -2,6 +2,7 @@ import requests
 from config import API_BASE_URL
 from user.apply import apply
 from user.register import register
+from user.account import account
 
 def main(email):
     print("\nWelcome to the Animal Shelter System!\n")
@@ -15,7 +16,7 @@ def main(email):
         operation = input("Enter your choice: ")
         match(operation):
             case "1":
-                print("My Accounts:")
+                account(user_id)
             case "2":
                 register(user_id)
             case "3":
