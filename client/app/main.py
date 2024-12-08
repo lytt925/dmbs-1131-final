@@ -3,17 +3,20 @@ from user import main as user
 from employee import main as employee
 
 def main():
-    print("歡迎使用動物收容所系統！")
+    print("歡迎使用動物收容所系統！\n")
     print("請選擇登入身份:")
     print("1. 一般使用者")
     print("2. 員工")
     print("3. 離開")
     role = input("請輸入選項編號: ")
+
+    print("\n")
     if role == "1":
         print("開始使用:")
         print("1. 註冊")
         print("2. 登入")
         operation = input("請輸入選項編號: ")
+        print("\n")
         if operation == "1":
             name = input("姓名: ")
             email = input("電子郵件: ")

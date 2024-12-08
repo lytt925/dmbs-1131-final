@@ -29,6 +29,12 @@ def account(user_id: str):
                         time = date_time_obj.strftime("%I:%M %p")    # 時間：如 10:00 AM
                         print(f"[{type_name[activity['activity_type']]}] {date}\n")
                         print(f" | 地點: {activity['location']}\n | 時間: {time}\n")
+                    activity_id = input("如欲取消請輸入申請編號: （結束查詢請輸入 Exit）")
+                    if activity_id == "Exit":
+                        continue
+                    activity_id = activities[int(activity_id)-1]['activity_id']
+                    response = requests.patch(f"{API_BASE_URL}/registrations", params={"user_id": user_id, "activity_id": activity_id})
+                    print("\n取消成功！\n")
                 except:
                     print("\n您尚未報名任何活動。\n")
             case "3":
