@@ -80,7 +80,8 @@ class ApplicationService:
     def update_application_status(application_id: int, status: str):
         query = """
         UPDATE application
-        SET status = %s
+        SET status = %s,
+            update_at = NOW()
         WHERE application_id = %s
         RETURNING application_id, update_at, status, user_id, animal_id;
         """
@@ -97,6 +98,24 @@ class ApplicationService:
                     return dict(zip(columns, updated_application))
                 else:
                     return None
+
+    @staticmethod
+    def fail_all_prev_applications(animal_id: int, exclude_application_id: int):
+        # 將同一 animal_id 下狀態為 'P' 且非剛剛更新成功的 application 全部改為 'F'
+        query = """
+        UPDATE application
+        SET status = 'F',
+            update_at = NOW()
+        WHERE animal_id = %s
+          AND application_id != %s
+          AND status = 'P';
+        """
+        params = (animal_id, exclude_application_id)
+
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, params)
+                conn.commit()
 
     @staticmethod
     def get_total_application_statistics():
