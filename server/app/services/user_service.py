@@ -22,11 +22,11 @@ class UserService:
                 return None
 
     @staticmethod
-    def create_user(name: str, email: str):
-        query = "INSERT INTO public.user (name, email) VALUES (%s, %s) RETURNING *"
+    def create_user(name: str, email: str, gender: str, password: str, phone: str):
+        query = "INSERT INTO public.user (name, email, gender, password, phone) VALUES (%s, %s, %s, %s, %s) RETURNING *"
         with db.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(query, (name, email))
+                cur.execute(query, (name, email, gender, password, phone))
                 user_id = cur.fetchone()[0]
                 conn.commit()
                 return user_id

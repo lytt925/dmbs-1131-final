@@ -23,6 +23,22 @@ class ApplicationService:
         if user_check is None:
             return {"success": False, "reasons": "請至少參加一次活動"}
 
+        # ---------------------------------------------------------
+        # 檢查三個月內是否有過申請
+        check_application_query = """
+        SELECT 1 FROM application
+        WHERE user_id = %s AND animal_id = %s
+          AND update_at >= NOW() - INTERVAL '3 months';
+        """
+        
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(check_application_query, (user_id, animal_id))
+                application_check = cur.fetchone()
+        
+        if application_check is not None:
+            return {"success": False, "reasons": "三個月內不得重複申請"}
+
         insert_query = """
         INSERT INTO application (update_at, status, user_id, animal_id)
         VALUES (%s, 'P', %s, %s)
