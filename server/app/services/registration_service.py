@@ -100,8 +100,9 @@ class RegistrationService:
         user_id: int, page: int = 1, per_page: int = 10
     ) -> dict:
         query = """
-            SELECT * 
-            FROM registration
+            SELECT r.*, a.activity_type, a.time, a.location
+            FROM registration r 
+            JOIN activity a ON r.activity_id = a.activity_id
             WHERE user_id = %s
             LIMIT %s OFFSET %s;
         """
