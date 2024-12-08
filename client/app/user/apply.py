@@ -1,9 +1,7 @@
 import requests
 from config import API_BASE_URL
 
-def apply(email: str):
-    user_id = requests.get(f"{API_BASE_URL}/users", params={"email": email}).json()['user_id']
-
+def apply(user_id: str):
     print("\nPlease select a shelter:")
     response = requests.get(f"{API_BASE_URL}/shelters")
     shelters = response.json()['data']
