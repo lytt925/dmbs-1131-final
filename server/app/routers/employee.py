@@ -14,6 +14,7 @@ class PunchRequest(BaseModel):
     employee_id: int
     punch_type: PunchType
 
+
 @router.get("/stats/")
 async def get_all_employees_stats(start_time: datetime, end_time: datetime):
     stats = EmployeeService.get_all_employees_stats(start_time, end_time)
@@ -31,10 +32,9 @@ async def create_punch(punch: PunchRequest):
     punches = EmployeeService.create_punch_for_user(employee_id, punch_type)
     return punches
 
-
-@router.get("/workloads")
-async def get_averaged_workload(employee_id: int=None, month: str=None, year: str=None):
-    workloads = EmployeeService.get_averaged_workload_by_month(employee_id, month, year)
-    if type(workloads) is dict:
-        raise HTTPException(status_code=workloads["error_code"], detail=workloads["message"])
-    return workloads
+@router.get("/login")
+async def login_employee(employee_id: int, password: str):
+    employee = EmployeeService.get_employee_by_credentials(employee_id, password)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Invalid employee_id or password.")
+    return employee

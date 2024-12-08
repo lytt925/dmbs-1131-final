@@ -55,3 +55,17 @@ class EmployeeService:
                     "created_at": row[1],
                     "punch_type": row[2],
                 }
+    @staticmethod
+    def get_employee_by_credentials(employee_id: int, password: str):
+        query = "SELECT * FROM employee WHERE employee_id = %s AND password = %s;"
+        params = (employee_id, password)
+        
+        with db.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, params)
+                row = cur.fetchone()
+                if row:
+                    columns = [desc[0] for desc in cur.description]
+                    return dict(zip(columns, row))
+                else:
+                    return None

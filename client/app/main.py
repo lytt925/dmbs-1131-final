@@ -1,5 +1,6 @@
 import sys
 from user import main as user
+from employee import main as employee
 
 def main():
     print("Welcome to the Animal Shelter Application System!")
@@ -30,9 +31,11 @@ def main():
             password = input("Password: ")
             user.main(email)
     elif role == "2":
-        account = input("Employee ID: ")
+        employee_id = input("Employee ID: ")
         password = input("Password: ")
-        # employee.main(account)
+        # 呼叫employee的main程式，執行登入並顯示員工相關選單
+        employee.main(int(employee_id), password)
+        
     elif role == "3":
         print("Exiting...")
         sys.exit()

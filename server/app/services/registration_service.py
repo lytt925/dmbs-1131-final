@@ -1,35 +1,72 @@
 from app.database import db
 
-
 class RegistrationService:
     @staticmethod
-    def sign_up_for_activity(user_id: int, activity_id: int, status: str):
-        select_query = """
+    def sign_up_for_activity(user_id: int, activity_id: int):
+        select_activity_query = """
+            SELECT remain_tickets 
+            FROM activity 
+            WHERE activity_id = %s
+            FOR UPDATE;
+        """
+
+        check_registration_query = """
             SELECT * FROM registration
             WHERE user_id = %s AND activity_id = %s AND status IN ('R', 'A', 'X');
         """
 
-        insert_query = """
+        update_activity_query = """
+            UPDATE activity
+            SET remain_tickets = remain_tickets - 1
+            WHERE activity_id = %s;
+        """
+
+        insert_registration_query = """
             INSERT INTO registration (user_id, activity_id, status)
             VALUES (%s, %s, 'R');
         """
 
         with db.get_connection() as conn:
-            with conn.cursor() as cur:
-                # Check existing registration
-                cur.execute(select_query, (user_id, activity_id))
-                existing_registration = cur.fetchone()
+            try:
+                with conn.cursor() as cur:
+                    # Lock the activity row 
+                    cur.execute(select_activity_query, (activity_id,))
+                    activity = cur.fetchone()
 
-                if existing_registration:
-                    return {
-                        "error": "User has already signed up for this activity",
-                    }
-                else:
+                    if not activity:
+                        return {"error": "Activity does not exist"}
+
+                    remain_seats = activity[0]
+                    if remain_seats <= 0:
+                        return {"error": "No remaining tickets for this activity"}
+
+                    # Check if the user is already registered
+                    cur.execute(check_registration_query, (user_id, activity_id))
+                    existing_registration = cur.fetchone()
+
+                    if existing_registration:
+                        return {
+                            "error": "User has already signed up for this activity",
+                        }
+
+                    # Update remaining seats
+                    cur.execute(update_activity_query, (activity_id,))
+                    if cur.rowcount == 0:
+                        # This happens if no rows match the `remain_seats > 0` condition
+                        return {"error": "No remaining tickets for this activity"}
+
                     # Insert new registration
-                    cur.execute(insert_query, (user_id, activity_id))
+                    cur.execute(
+                        insert_registration_query, (user_id, activity_id)
+                    )
+
+                    # Commit the transaction
                     conn.commit()
                     return {"data": {"user_id": user_id, "activity_id": activity_id}}
 
+            except Exception as e:
+                conn.rollback()
+                return {"error": str(e)}
 
     @staticmethod
     def cancel_activity_registration(user_id: int, activity_id: int):
@@ -57,16 +94,19 @@ class RegistrationService:
                     return {
                         "error": "No registration record found for the user and activity",
                     }
-                
+
     @staticmethod
-    def get_registration_by_user_id(user_id: int, page: int = 1, per_page: int = 10) -> dict:
+    def get_registration_by_user_id(
+        user_id: int, page: int = 1, per_page: int = 10
+    ) -> dict:
         query = """
-            SELECT * 
-            FROM registration
+            SELECT r.*, a.activity_type, a.time, a.location
+            FROM registration r 
+            JOIN activity a ON r.activity_id = a.activity_id
             WHERE user_id = %s
             LIMIT %s OFFSET %s;
         """
-        
+
         with db.get_connection() as conn:
             with conn.cursor() as cur:
                 # Calculate offset
@@ -76,12 +116,14 @@ class RegistrationService:
                 cur.execute(query, (user_id, per_page, offset))
                 registrations = cur.fetchall()
                 columns = [desc[0] for desc in cur.description]
-                results = [dict(zip(columns, registration)) for registration in registrations]
+                results = [
+                    dict(zip(columns, registration)) for registration in registrations
+                ]
 
         return {
             "data": results,
             "meta": {
                 "page": page,
                 "per_page": per_page,
-            }
+            },
         }
