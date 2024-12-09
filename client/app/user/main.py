@@ -13,7 +13,7 @@ def main(email):
         print("2. 參加活動☀️")
         print("3. 認養申請✎")
         print("4. 登出")
-        operation = input("Enter your choice: ")
+        operation = input("請輸入選項編號: ")
         match(operation):
             case "1":
                 account(user_id)
