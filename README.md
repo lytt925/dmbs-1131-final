@@ -1,7 +1,9 @@
 # DBMS 1131 Final Project
 
-This project is a web application built using FastAPI for the server-side.
-The presentation video is [here](https://youtu.be/5WRRdEJFbns)
+This project is a web application built using FastAPI for the server-side.<br/>
+The presentation video is [here](https://youtu.be/5WRRdEJFbns).<br/>
+screenshot of the system:<br/>
+<img width="470" alt="image" src="https://github.com/user-attachments/assets/ff40257d-3699-4c39-be33-e59afa423d11">
 
 ## Running the Server
 
