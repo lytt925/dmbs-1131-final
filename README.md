@@ -5,7 +5,10 @@ The presentation video is [here](https://youtu.be/5WRRdEJFbns).<br/>
 screenshot of the system:<br/>
 <img width="470" alt="image" src="https://github.com/user-attachments/assets/ff40257d-3699-4c39-be33-e59afa423d11">
 
-## User functions
+## Project Overview
+This system is specifically designed for animal shelter staff and visitors. It helps staff meticulously manage critical information about all animals, including daily care and medical records, ensuring every animal receives the best care. Additionally, it organizes shelter activities and member information in a clear and structured manner, enabling operators to manage and run the shelter more efficiently, ultimately helping furry friends find their forever homes faster.
+
+## User Functions
 
 ### User (一般使用者）
 
