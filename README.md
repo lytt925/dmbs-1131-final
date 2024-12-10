@@ -5,6 +5,45 @@ The presentation video is [here](https://youtu.be/5WRRdEJFbns).<br/>
 screenshot of the system:<br/>
 <img width="470" alt="image" src="https://github.com/user-attachments/assets/ff40257d-3699-4c39-be33-e59afa423d11">
 
+## User functions
+
+### User (一般使用者）
+
+
+**View Animal Information**
+- Users can view detailed information about animals, including gender, age, health status, and other essential details to better understand the animals.
+
+**Submit Adoption Application**
+- Users can submit an adoption application by providing necessary details such as the animal they wish to adopt and personal information (e.g., name, contact details). The system will record and process each application.
+
+**Register for Activities**
+- Users can browse available activities in the system, select the ones they are interested in, and register to participate. The system will add the visitor’s registration information to the database.
+
+**Cancel Activity Registration**
+- If users are unable to attend a registered activity, they can cancel their registration through the system, and the activity list will be updated accordingly.
+
+**View Participation History**
+- Users can view their activity participation history, including the names, dates, and details of the activities they have attended.
+
+### Employee
+
+
+**Daily Attendance Tracking**
+- Record clock-in and clock-out dates and times for daily attendance.
+
+**Manage Animal Information**
+- Perform create, read, update, and delete (CRUD) operations on animal information, including adoption status and other details.
+
+**Review Adoption Applications**
+- Access and review applicants’ adoption records and activity participation history to determine application approval.
+
+**Manage Care Records**
+- Perform CRUD operations on care records to track the daily care activities for animals.
+
+**Manage Medical Records**
+- Perform CRUD operations on medical records to monitor and understand the health status of animals.
+
+
 ## Running the Server
 
 To run the server, you can follow these steps:
