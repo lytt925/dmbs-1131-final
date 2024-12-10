@@ -1,10 +1,10 @@
 import psycopg2
 
 db_config = {
-    'dbname': 'shelter_db',
+    'dbname': 'db',
     'user': 'postgres',
-    'password': 'pg_password',
-    'host': 'hpc.psy.ntu.edu.tw',
+    'password': 'pwd',
+    'host': 'somewhere',
     'port': 5432
 }
 
