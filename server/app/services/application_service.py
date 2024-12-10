@@ -76,7 +76,7 @@ class ApplicationService:
 
         # 基本查詢語句
         base_query = """
-            SELECT app.*, ani.shelter_id
+            SELECT app.*, ani.*
             FROM application app
             JOIN animal ani ON app.animal_id = ani.animal_id
         """
