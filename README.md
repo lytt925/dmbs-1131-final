@@ -7,12 +7,17 @@ The presentation video is [here](https://youtu.be/5WRRdEJFbns)
 
 To run the server, you can follow these steps:
 
-1. Navigate to the server directory:
+1. Install the required dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+   
+2. Navigate to the server directory:
    ```sh
    cd ./server
    ```
 
-2. Run the server using `uvicorn`:
+3. Run the server using `uvicorn`:
    ```sh
    uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
    ```
@@ -21,7 +26,29 @@ To run the server, you can follow these steps:
    ```sh
    python -m app.main
    ```
+## Running the Client
 
+To run the client, you can follow these steps:
+
+1. Navigate to the client directory:
+   ```sh
+   cd ./client
+   ```
+
+2. Install the required dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+3. Navigate to the `client/app` directory:
+   ```sh
+   cd app
+   ```
+
+4. Run the client using Python:
+   ```sh
+   python3 main.py
+   ```
 ## Modules Overview
 
 ### Main Application (`server/app/main.py`)
