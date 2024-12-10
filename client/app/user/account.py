@@ -21,19 +21,20 @@ def account(user_id: str):
                 try:
                     response = requests.get(f"{API_BASE_URL}/registrations", params={"user_id": user_id})
                     activities = response.json()['data']
+                    activities = list(filter(lambda x: x['status'] == 'R', activities))
                     print("\n已報名的活動:\n")
                     for i, activity in enumerate(activities):
                         date_time_obj = datetime.strptime(activity['time'], "%Y-%m-%dT%H:%M:%S")
 
                         date = date_time_obj.strftime("%B %d, %Y")  # 日期：如 December 10, 2024
                         time = date_time_obj.strftime("%I:%M %p")    # 時間：如 10:00 AM
-                        print(f"[{type_name[activity['activity_type']]}] {date}\n")
+                        print(f"{i+1}. [{type_name[activity['activity_type']]}] {date}\n")
                         print(f" | 地點: {activity['location']}\n | 時間: {time}\n")
                     activity_id = input("如欲取消請輸入申請編號: （結束查詢請輸入 Exit）")
                     if activity_id == "Exit":
                         continue
                     activity_id = activities[int(activity_id)-1]['activity_id']
-                    response = requests.patch(f"{API_BASE_URL}/registrations", params={"user_id": user_id, "activity_id": activity_id})
+                    response = requests.patch(f"{API_BASE_URL}/registrations", json={"user_id": user_id, "activity_id": activity_id})
                     print("\n取消成功！\n")
                 except:
                     print("\n您尚未報名任何活動。\n")
@@ -43,11 +44,8 @@ def account(user_id: str):
                     applications = response.json()
                     print("\n認養申請:\n")
                     for i, application in enumerate(applications):
-                        print(application['update_at'])
                         date_time_obj = datetime.strptime(application['update_at'], "%Y-%m-%dT%H:%M:%S.%f")
-                        print(date_time_obj)
                         date = date_time_obj.strftime("%B %d, %Y")  # 日期：如 December 10, 2024
-                        print(date)
                         print(f"{application['name']} ({date})")
                         print(f" | 品種: {application['breed']}\n | 性別: {sex[application['sex']]}\n | 體型: {application['size']}\n")
                 except:

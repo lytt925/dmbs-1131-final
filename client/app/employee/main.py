@@ -7,7 +7,7 @@ def main(employee_id: int, password: str):
         # 登入失敗，直接返回
         return
 
-    print(f"Welcome {employee['name']} (Employee ID: {employee['employee_id']}) to the Animal Shelter System!")
+    print(f"{employee['name']} (Employee ID: {employee['employee_id']}) 已登入動物收容所系統")
     while True:
         print("Menu:")
         print("1. 照顧紀錄 (Care Records)")
