@@ -30,7 +30,7 @@ def main(employee_id: int, password: str):
                         case "1":
                             care_record.query_care_records()
                         case "2":
-                            care_record.create_care_record()
+                            care_record.create_care_record(employee['employee_id'])
                         case "3":
                             break
                         case _:
